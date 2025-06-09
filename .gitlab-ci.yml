@@ -1,5 +1,18 @@
 stages:
+  - check
   - daily_job
+
+check_runner_ip:
+  stage: check
+  image: curlimages/curl
+  script:
+    - echo "Runner IP is:"
+    - curl ifconfig.me
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+  tags:
+    - general-docker
+
 
 daily_job:
   stage: daily_job
