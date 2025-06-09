@@ -11,4 +11,5 @@ daily_job:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_PIPELINE_SOURCE == "web"'
-
+  tags:
+    - general-docker  # 加這行！
