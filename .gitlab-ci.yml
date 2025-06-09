@@ -5,8 +5,8 @@ daily_job:
   stage: daily_job
   image: python:3.10
   before_script:
-    - pip install requests beautifulsoup4 pymongo python-telegram-bot
+    - pip install requests beautifulsoup4 pymongo python-telegram-bot python-dotenv
   script:
-    - python crawler/fetch_jobs.py
+    - python -m crawler.fetch_jobs
   only:
     - schedules
