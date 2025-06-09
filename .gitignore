@@ -1,1 +1,4 @@
 venv
+*.mod
+*.sum
+__pycache__

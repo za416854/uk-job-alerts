@@ -1,0 +1,12 @@
+stages:
+  - daily_job
+
+daily_job:
+  stage: daily_job
+  image: python:3.10
+  before_script:
+    - pip install requests beautifulsoup4 pymongo python-telegram-bot
+  script:
+    - python crawler/fetch_jobs.py
+  only:
+    - schedules
