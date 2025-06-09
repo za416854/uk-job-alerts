@@ -7,6 +7,7 @@ daily_job:
   before_script:
     - apt-get update && apt-get install -y ca-certificates curl openssl
     - pip install --upgrade pip
+    # - apt-get update && apt-get install -y ca-certificates
     - pip install requests beautifulsoup4 pymongo python-telegram-bot python-dotenv
   script:
     - python -m crawler.fetch_jobs
