@@ -9,8 +9,8 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-def fetch_jobs(keyword=".net engineer", location="london"):
-    url = f"https://www.reed.co.uk/jobs/{keyword.replace(' ', '-')}-jobs-in-{location.replace(' ', '-')}"
+def fetch_jobs(keyword=".net", location="united kingdom"):
+    url = f"https://www.reed.co.uk/jobs/{keyword.replace(' ', '-')}-jobs-in-{location.replace(' ', '-')}?isEarlyBird=true"
     headers = {"User-Agent": "Mozilla/5.0"}
 
     res = requests.get(url, headers=headers)
