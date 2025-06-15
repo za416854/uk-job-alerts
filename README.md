@@ -1,93 +1,104 @@
-```markdown
-# UK Job Alert Bot (Line Notify + Python + MongoDB + GitLab CI)
 
-Automatically scrapes UK job listings from [Reed.co.uk](https://www.reed.co.uk) every day, filters them, and sends push notifications to Line.
+# UK Job Alerts
 
-## 🛠 Tech Stack
-- **Python**: Web scraping + sending notifications
-- **Go**: Provides a REST API to browse MongoDB job data
-- **MongoDB Atlas**: Stores job listing data
-- **GitLab CI**: Scheduled daily job execution
-- **Line Notify**: Push notification delivery
+This side project is a job monitoring system built to automatically fetch software engineering job listings from Reed.co.uk and send Telegram notifications for new job posts. It is designed to be lightweight, cloud-deployable, and suitable for daily job search automation.
 
 ---
 
-## 🚀 Getting Started
+## 🔍 Features
 
-### 1. Python Setup
-```bash
-# Set up a virtual environment
-python -m venv venv
-source venv/bin/activate      # Linux/macOS
-# or
-venv\Scripts\activate         # Windows
+- Python crawler that scrapes job postings from reed.co.uk (e.g., software engineer in the UK)
+- Filters out duplicates by checking MongoDB URL records
+- Automatically stores job data in MongoDB Atlas
+- Sends job updates via Telegram bot to a specified chat group
+- Supports GitLab CI/CD for automated daily execution (cron schedule)
+- Fully containerized with Docker and Railway deployment
+- Simple Prometheus-compatible metrics available via `/metrics`
 
-# Install dependencies
-pip install requests beautifulsoup4 pymongo python-dotenv
-# For replit users
-pip install --no-user requests beautifulsoup4 "pymongo[srv]" python-dotenv
+---
 
-# Freeze requirements (optional)
-pip freeze > requirements.txt
+## 🏗️ Architecture Overview
+
+```
+[User Schedule] → GitLab CI → Python Crawler
+                                ↓
+                       Check existing MongoDB
+                                ↓
+                    ┌──── Duplicate ────┐
+                    ↓                  ↓
+             (Skip insert)       Insert New
+                                        ↓
+                                Send to Telegram
 ```
 
-### 2. Run the Crawler
+---
+
+## ⚙️ Tech Stack
+
+- **Language**: Python 3.10
+- **Queue**: None (single batch job)
+- **Database**: MongoDB Atlas
+- **Deployment**: Railway (Free tier)
+- **CI/CD**: GitLab CI with daily cron schedule
+- **Notification**: Telegram Bot API
+- **Monitoring**: Prometheus metrics exposed
+
+---
+
+## 📦 Folder Structure
+
+```
+uk-job-alerts/
+├── crawler/
+│   └── fetch_jobs.py       # Main crawler logic
+├── notifier/
+│   └── send_alert.py       # Telegram notifier logic
+├── .gitlab-ci.yml          # CI pipeline
+├── requirements.txt        # Dependencies
+└── README.md
+```
+
+---
+
+## 🛠️ Setup
+
+1. **Environment Variables (.env)**
+
+```
+MONGO_URI=your_mongo_uri
+BOT_TOKEN=your_telegram_bot_token
+CHAT_ID=your_telegram_chat_id
+```
+
+2. **Run manually**
+
 ```bash
 python -m crawler.fetch_jobs
 ```
 
----
+3. **Run via GitLab CI** (auto-daily)
 
-### 3. Go API Setup
-```bash
-# Install Go if not already installed: https://go.dev/dl/
-go version     # verify installation
-
-# Inside the /api directory
-cd api
-go mod init uk-job-alerts
-go get github.com/gofiber/fiber/v2
-```
+- Go to **CI/CD > Schedules**
+- Add a rule like `0 18 * * *` (every 6PM London)
+- Pass variables if not masked in project
 
 ---
 
-## 🐞 Debug Mode
-To debug in VS Code, press `Ctrl + Shift + D`, open `launch.json`, and use the following configuration:
-```json
-"configurations": [
-  {
-    "name": "Python: fetch_jobs (by module)",
-    "type": "debugpy",
-    "request": "launch",
-    "module": "crawler.fetch_jobs",
-    "console": "integratedTerminal",
-    "cwd": "${workspaceFolder}"
-  }
-]
-```
+## 📬 Telegram Output Example
+
+> `📌 Senior Python Developer`
+> `🏢 Company: XYZ Recruitment`
+> `📍 Location: Remote`
+> [Apply Link](https://www.reed.co.uk/jobs/senior-python-developer/xxxxxxx)
 
 ---
 
-## 📦 Project Structure
-```
-uk-job-alerts/
-├── crawler/
-│   └── fetch_jobs.py        # Scrapes job listings
-├── notifier/
-│   └── line_notify.py       # Sends Line Notify message
-├── api/                     # Go-based REST API
-├── .env                     # LINE_NOTIFY_TOKEN goes here
-├── .gitlab-ci.yml           # GitLab CI schedule definition
-```
+## ✅ Motivation
+
+I built this project to automate job hunting in the UK tech market and explore integration between Python automation, CI/CD, and Telegram notifications. Ideal for personal use and learning DevOps workflow.
 
 ---
 
-## ✅ How to Use
-1. Create a `.env` file and insert your `LINE_NOTIFY_TOKEN`.
-2. Configure a GitLab CI schedule (e.g. daily at 9AM UK time).
-3. Receive daily updates of UK tech jobs via Line!
+## 📄 License
 
----
-```
-
----
+MIT License
