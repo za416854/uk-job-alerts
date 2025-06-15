@@ -1,76 +1,93 @@
+```markdown
 # UK Job Alert Bot (Line Notify + Python + MongoDB + GitLab CI)
 
-每天自動爬取英國職缺網站（Reed），過濾職缺後推播至 Line。
+Automatically scrapes UK job listings from [Reed.co.uk](https://www.reed.co.uk) every day, filters them, and sends push notifications to Line.
 
-## 技術棧
-- Python: 網頁爬蟲 + 推播
-- Go 寫一個 REST API，可以透過網頁查詢 MongoDB 裡抓到的職缺資料。
-- MongoDB Atlas: 儲存職缺
-- GitLab CI: 每日定時執行
-- Line Notify: 發送通知
+## 🛠 Tech Stack
+- **Python**: Web scraping + sending notifications
+- **Go**: Provides a REST API to browse MongoDB job data
+- **MongoDB Atlas**: Stores job listing data
+- **GitLab CI**: Scheduled daily job execution
+- **Line Notify**: Push notification delivery
 
+---
 
-## Getting started
-```
+## 🚀 Getting Started
+
+### 1. Python Setup
+```bash
+# Set up a virtual environment
 python -m venv venv
-venv\Scripts\activate (windows) or source venv/bin/activate(linux)
+source venv/bin/activate      # Linux/macOS
+# or
+venv\Scripts\activate         # Windows
 
+# Install dependencies
+pip install requests beautifulsoup4 pymongo python-dotenv
+# For replit users
+pip install --no-user requests beautifulsoup4 "pymongo[srv]" python-dotenv
 
-
-pip install requests beautifulsoup4 
-or 
-pip install --no-user requests beautifulsoup4 (for replit)
-
-
-python -m pip install "pymongo[srv]" 
-or 
-python -m pip install --no-user "pymongo[srv]" (for replit)
-
-pip install requests
-or 
-pip install --no-user requests (replit)
-
-pip install python-dotenv
-
+# Freeze requirements (optional)
 pip freeze > requirements.txt
+```
 
-前往 https://go.dev/dl/  安裝 Golang（如果你還沒裝）
-then test prompt: go version
+### 2. Run the Crawler
+```bash
+python -m crawler.fetch_jobs
+```
 
-建立 Go API 專案（在 api/ 資料夾）
+---
+
+### 3. Go API Setup
+```bash
+# Install Go if not already installed: https://go.dev/dl/
+go version     # verify installation
+
+# Inside the /api directory
 cd api
 go mod init uk-job-alerts
-
 go get github.com/gofiber/fiber/v2
-or
-go install github.com/gofiber/fiber/v2
-
-請運行以下prompt: 
-python -m crawler.fetch_jobs
-
 ```
 
+---
 
-## 開debug模式
-```
-首先ctrl + shift + D 開 launch.json，再來configurations參數更改如下:
+## 🐞 Debug Mode
+To debug in VS Code, press `Ctrl + Shift + D`, open `launch.json`, and use the following configuration:
+```json
 "configurations": [
-        {
-            "name": "Python: fetch_jobs (by module)",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "crawler.fetch_jobs",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}"
-        }
-    ]
+  {
+    "name": "Python: fetch_jobs (by module)",
+    "type": "debugpy",
+    "request": "launch",
+    "module": "crawler.fetch_jobs",
+    "console": "integratedTerminal",
+    "cwd": "${workspaceFolder}"
+  }
+]
 ```
-## 如何使用
-1. 建立 .env 檔，填入 LINE_NOTIFY_TOKEN
-2. 設定 GitLab CI 排程
-3. 每天早上就會收到 UK 新職缺！
 
-## 專案結構
-- crawler/fetch_jobs.py：爬取職缺資料
-- notifier/line_notify.py：發送 Line 通知
-- .gitlab-ci.yml：自動排程腳本
+---
+
+## 📦 Project Structure
+```
+uk-job-alerts/
+├── crawler/
+│   └── fetch_jobs.py        # Scrapes job listings
+├── notifier/
+│   └── line_notify.py       # Sends Line Notify message
+├── api/                     # Go-based REST API
+├── .env                     # LINE_NOTIFY_TOKEN goes here
+├── .gitlab-ci.yml           # GitLab CI schedule definition
+```
+
+---
+
+## ✅ How to Use
+1. Create a `.env` file and insert your `LINE_NOTIFY_TOKEN`.
+2. Configure a GitLab CI schedule (e.g. daily at 9AM UK time).
+3. Receive daily updates of UK tech jobs via Line!
+
+---
+```
+
+---
