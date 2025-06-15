@@ -35,10 +35,12 @@ This side project is a job monitoring system built to automatically fetch softwa
 
 ## ⚙️ Tech Stack
 
-- **Language**: Python 3.10
-- **Database**: MongoDB Atlas
-- **CI/CD**: GitLab CI with daily cron schedule
-- **Notification**: Telegram Bot API
+- **Python**: Web scraping + notification
+- **Go**: REST API to query jobs stored in MongoDB
+- **MongoDB Atlas**: Store job listings
+- **GitLab CI**: Automate scheduled jobs
+- **Line Notify**: Push daily alerts
+
 
 ---
 
@@ -59,27 +61,70 @@ uk-job-alerts/
 
 ## 🛠️ Setup
 
-1. **Environment Variables (.env)**
-
-```
-MONGO_URI=your_mongo_uri
-BOT_TOKEN=your_telegram_bot_token
-CHAT_ID=your_telegram_chat_id
-```
-
-2. **Run manually**
-
 ```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate it
+venv\Scripts\activate  (Windows)
+source venv/bin/activate  (Linux/macOS)
+
+# Install dependencies
+pip install requests beautifulsoup4
+# or for replit
+pip install --no-user requests beautifulsoup4
+
+pip install "pymongo[srv]"
+# or
+pip install --no-user "pymongo[srv]"  # for replit
+
+pip install python-dotenv
+
+# Export installed packages
+pip freeze > requirements.txt
+
+# Run the crawler
 python -m crawler.fetch_jobs
 ```
 
-3. **Run via GitLab CI** (auto-daily)
+2. **Run manually** 
+```bash
+# Install Go from https://go.dev/dl/
+go version  # verify installation
 
-- Go to **CI/CD > Schedules**
-- Add a rule like `0 18 * * *` (every 6PM London)
-- Pass variables if not masked in project
+# Init the project
+go mod init uk-job-alerts
 
----
+# Install required libraries
+go get github.com/joho/godotenv
+go get github.com/gofiber/fiber/v2
+go get go.mongodb.org/mongo-driver/mongo
+
+go mod tidy
+
+# Run the API
+go run api/main.go
+```
+
+** Open `launch.json` (Ctrl + Shift + D) and update:** 
+```json
+"configurations": [
+    {
+        "name": "Python: fetch_jobs (by module)",
+        "type": "debugpy",
+        "request": "launch",
+        "module": "crawler.fetch_jobs",
+        "console": "integratedTerminal",
+        "cwd": "${workspaceFolder}"
+    }
+]
+```
+
+## Project Structure
+- `crawler/fetch_jobs.py`: Job scraping logic
+- `notifier/line_notify.py`: Push notification handler
+- `.gitlab-ci.yml`: CI/CD pipeline config
+
 
 ## 📬 Telegram Output Example
 
@@ -95,7 +140,4 @@ python -m crawler.fetch_jobs
 I built this project to automate job hunting in the UK tech market and explore integration between Python automation, CI/CD, and Telegram notifications. Ideal for personal use and learning DevOps workflow.
 
 ---
-
-## 📄 License
-
-MIT License
+ 
