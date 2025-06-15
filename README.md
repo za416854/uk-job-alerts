@@ -11,9 +11,7 @@ This side project is a job monitoring system built to automatically fetch softwa
 - Filters out duplicates by checking MongoDB URL records
 - Automatically stores job data in MongoDB Atlas
 - Sends job updates via Telegram bot to a specified chat group
-- Supports GitLab CI/CD for automated daily execution (cron schedule)
-- Fully containerized with Docker and Railway deployment
-- Simple Prometheus-compatible metrics available via `/metrics`
+- Supports GitLab CI/CD for automated daily execution (cron schedule) 
 
 ---
 
