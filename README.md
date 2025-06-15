@@ -36,12 +36,9 @@ This side project is a job monitoring system built to automatically fetch softwa
 ## ⚙️ Tech Stack
 
 - **Language**: Python 3.10
-- **Queue**: None (single batch job)
 - **Database**: MongoDB Atlas
-- **Deployment**: Railway (Free tier)
 - **CI/CD**: GitLab CI with daily cron schedule
 - **Notification**: Telegram Bot API
-- **Monitoring**: Prometheus metrics exposed
 
 ---
 
