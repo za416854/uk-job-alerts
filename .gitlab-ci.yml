@@ -1,3 +1,4 @@
+# stages, script, rules等關鍵字就是確認是否為CICD的關鍵字
 # 流程分類
 stages:
   - check
