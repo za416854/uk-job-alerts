@@ -1,7 +1,8 @@
+# 流程分類
 stages:
   - check
   - daily_job
-
+# 實際工作項目，確認執行任務的網路IP多少，以避免頻繁抓取被抓DDOS攻擊
 check_runner_ip:
   stage: check
   image: curlimages/curl
@@ -12,11 +13,13 @@ check_runner_ip:
     - if: '$CI_PIPELINE_SOURCE == "web"'
   tags:
     - general-docker
-
-
+# 實際工作項目，跑爬蟲，抓職缺
 daily_job:
+# 定義工作階段，這個參數是每天
   stage: daily_job
+  # 確認哪個映像檔
   image: python:3.10-slim-bullseye
+  # script跑前準備工作，安裝套件
   before_script:
     - apt-get update && apt-get install -y ca-certificates curl openssl
     - pip install --upgrade pip
@@ -24,8 +27,11 @@ daily_job:
     - pip install requests beautifulsoup4 pymongo python-telegram-bot python-dotenv
   script:
     - python -m crawler.fetch_jobs
+    # 啥時跑script
   rules:
+    # 時間到了程式自動跑，gitlab => pipeline shcedule設定啥時跑
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    # 網頁點擊才跑
     - if: '$CI_PIPELINE_SOURCE == "web"'
   tags:
     - general-docker
