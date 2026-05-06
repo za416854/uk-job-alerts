@@ -27,6 +27,7 @@ daily_job:
     # - apt-get update && apt-get install -y ca-certificates
     - pip install requests beautifulsoup4 pymongo python-telegram-bot python-dotenv
   script:
+    # 這裡是跑 runner ，不是部屬網站，但也是屬於CD的一部分
     - python -m crawler.fetch_jobs
     # 啥時跑script
   rules:
